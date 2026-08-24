@@ -1,0 +1,37 @@
+services:
+  webdav:
+    build: .
+    image: obsidian-webdav-server
+    container_name: obsidian-webdav
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PORT: 8080
+      DATA_DIR: /data
+    volumes:
+      - ./data:/data
+    # Deliberately not published to the host: the only way in is the tunnel.
+    # Uncomment for LAN access or local debugging.
+    # ports:
+    #   - "8080:8080"
+    expose:
+      - "8080"
+    networks:
+      - obsidian
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: obsidian-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:?set TUNNEL_TOKEN in .env}
+    depends_on:
+      webdav:
+        condition: service_healthy
+    networks:
+      - obsidian
+
+networks:
+  obsidian:
+    driver: bridge
