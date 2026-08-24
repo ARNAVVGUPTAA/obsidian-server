@@ -6,16 +6,16 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      PORT: 8080
+      PORT: 2222
       DATA_DIR: /data
     volumes:
       - ./data:/data
     # Deliberately not published to the host: the only way in is the tunnel.
     # Uncomment for LAN access or local debugging.
     # ports:
-    #   - "8080:8080"
+    #   - "2222:2222"
     expose:
-      - "8080"
+      - "2222"
     networks:
       - obsidian
 

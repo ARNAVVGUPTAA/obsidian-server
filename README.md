@@ -11,7 +11,7 @@ Obsidian client (desktop / iOS / Android)
         |  HTTPS
         v
 Cloudflare edge  ->  tunnel  ->  cloudflared container
-                                      |  http://webdav:8080
+                                      |  http://webdav:2222
                                       v
                                 webdav container  ->  ./data
 ```
@@ -31,7 +31,7 @@ Under **Public Hostnames**, add:
 | Subdomain | `obsidian` |
 | Domain | `arnavgupta.dpdns.org` |
 | Service type | `HTTP` |
-| URL | `webdav:8080` |
+| URL | `webdav:2222` |
 
 `webdav` is the Compose service name — cloudflared resolves it over the shared Docker network, so this works without publishing any ports. Cloudflare creates the DNS record for you.
 
@@ -108,5 +108,5 @@ Uncomment the `ports:` block in [docker-compose.yml](docker-compose.yml#L16-L18)
 
 ```bash
 docker compose up -d --build webdav
-curl http://localhost:8080/healthz
+curl http://localhost:2222/healthz
 ```
